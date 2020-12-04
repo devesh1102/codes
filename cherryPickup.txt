@@ -1,0 +1,24 @@
+ def cherryPickup(self, grid: List[List[int]]) -> int:
+        n = len(grid)
+        # m = len(grid[0])
+        
+        moves = [[1,1,0],[1,0,0],[0,0,1],[0,1,1]]
+        dp = [[[-1 for i in range(n)] for j in range(n)] for k in range(n)]
+        dp[0][0][0] = 0
+        for r1 in range(n):
+            for r2 in range(n):
+                for c1 in range(n):
+                    c2 = (r1+c1) - r2
+                    if c2<0 or c2>=n or grid[r1][c1]== -1 or  grid[r2][c2] == -1 or dp[r1][r2][c1] == -1:
+                        continue
+                    dp[r1][r2][c1] = dp[r1][r2][c1] + grid[r1][c1]
+                    if r1 != r2 or c1!= c2 :
+                        dp[r1][r2][c1]=  dp[r1][r2][c1]+ grid[r2][c2]
+                    for m in moves:
+                        [dr1,dr2,dc1] = m
+                        if dr1 + r1>= n or  dr2 + r2>= n or dc1 + c1>= n:
+                            continue
+                        dp[dr1 + r1][dr2 + r2][dc1 + c1] = max(dp[dr1 + r1][dr2 + r2][dc1 + c1] ,dp[r1][r2][c1])
+        if dp[-1][-1][-1] == -1:
+            return 0
+        return dp[-1][-1][-1]
